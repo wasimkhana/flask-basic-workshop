@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Home</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <form method="post" action="{{ url_for('post') }}">
+        <h2>Create Post</h2>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" required></textarea>
+        <button type="submit">Post</button>
+    </form>
+    <h2>Posts</h2>
+    {% for post in posts.items %}
+        <div>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+            <form method="post" action="{{ url_for('comment') }}">
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <label for="content">Comment:</label>
+                <textarea id="content" name="content" required></textarea>
+                <button type="submit">Comment</button>
+            </form>
+            <h4>Comments</h4>
+            {% for comment in post.comments %}
+                <p>{{ comment.content }} - by {{ comment.author.username }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <div>
+        {% if posts.has_prev %}
+            <a href="{{ url_for('home', page=posts.prev_num) }}">Previous</a>
+        {% endif %}
+        {% if posts.has_next %}
+            <a href="{{ url_for('home', page=posts.next_num) }}">Next</a>
+        {% endif %}
+    </div>
+</body>
+</html>
